@@ -32,9 +32,9 @@ public class User extends Common {
     }
     if (email != null && !email.isBlank()) {
       this.email = email;
-      정 anyValueUpdated = true;
+      anyValueUpdated = true;
     }
-    if (passwrod != null && !passwrod.isBlank()) {
+    if (passwrod != null && !password.isBlank()) {
       this.password = passwrod;
       anyValueUpdated = true;
     }

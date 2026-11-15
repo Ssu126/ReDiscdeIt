@@ -27,12 +27,12 @@ public class Message extends Common {
   }
 
   public void update(String content) {
-    boolean anyValueUdpated = false;
+    boolean anyValueUpdated = false;
     if (content != null && !content.isBlank()) {
       this.content = content;
-      anyValueUdpated = true;
+      anyValueUpdated = true;
     }
-    if (anyValueUdpated) {
+    if (anyValueUpdated) {
       updateTimestamp();
     }
   }
