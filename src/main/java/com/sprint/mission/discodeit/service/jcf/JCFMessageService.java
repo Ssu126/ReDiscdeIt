@@ -25,12 +25,9 @@ public class JCFMessageService implements MessageService {
 
   @Override
   public Message create(String content, UUID authorId, UUID channelId) {
-    if (content == null || content.isBlank()) {
-      throw new IllegalArgumentException("메시지가 비어있습니다.");
-    }
-
     userService.find(authorId);
     channelService.find(channelId);
+    validateContent(content);
 
     Message message = new Message(content, authorId, channelId);
     data.put(message.getId(), message);
@@ -51,6 +48,8 @@ public class JCFMessageService implements MessageService {
   @Override
   public Message update(UUID id, String content) {
     Message message = findByIdOrThrow(id);
+    validateContent(content);
+
     message.update(content);
     return message;
   }
@@ -67,5 +66,11 @@ public class JCFMessageService implements MessageService {
       throw new NoSuchElementException("존재하지 않는 메시지 id: " + id);
     }
     return message;
+  }
+
+  private void validateContent(String content) {
+    if (content == null || content.isBlank()) {
+      throw new IllegalArgumentException("메시지 내용이 비어있습니다.");
+    }
   }
 }
