@@ -39,7 +39,6 @@ public class JCFMessageService implements MessageService {
     return findByIdOrThrow(id);
   }
 
-
   @Override
   public List<Message> findAll() {
     return new ArrayList<>(data.values());

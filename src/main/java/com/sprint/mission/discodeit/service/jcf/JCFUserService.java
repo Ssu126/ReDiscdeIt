@@ -54,5 +54,4 @@ public class JCFUserService implements UserService {
     }
     return user;
   }
-
 }

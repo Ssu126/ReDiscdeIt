@@ -113,7 +113,7 @@ public class FileUserService implements UserService {
   private User read(Path path) {
     // 파일 입력 스트림을 열고, 바이트 데이터를 객체 형태로 역직렬화
     try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
-      //데이터를 읽어 자바 객체 인스턴스로 복원, 오브젝트로 반환
+      // 데이터를 읽어 자바 객체 인스턴스로 복원, 오브젝트로 반환
       return (User) ois.readObject();
     } catch (IOException e) {
       throw new UncheckedIOException("읽기 실패: " + path, e);

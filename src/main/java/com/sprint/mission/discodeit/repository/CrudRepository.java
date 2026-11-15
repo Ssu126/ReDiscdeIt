@@ -16,5 +16,4 @@ public interface CrudRepository<T extends Common> {
   boolean existsById(UUID id);
 
   void deleteById(UUID id);
-
 }
