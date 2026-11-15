@@ -32,9 +32,11 @@ public class User extends Common {
     }
     if (email != null && !email.isBlank()) {
       this.email = email;
+      정 anyValueUpdated = true;
     }
     if (passwrod != null && !passwrod.isBlank()) {
       this.password = passwrod;
+      anyValueUpdated = true;
     }
     if (anyValueUpdated) {
       updateTimestamp();
