@@ -50,7 +50,7 @@ public class JCFChannelService implements ChannelService {
   private Channel findByIdOrThrow(UUID id) {
     Channel channel = data.get(id);
     if (channel == null) {
-      throw new NoSuchElementException("존재하지 않는 id: " + id);
+      throw new NoSuchElementException("존재하지 않는 채널 id: " + id);
     }
     return channel;
   }
