@@ -20,7 +20,7 @@ public class Channel extends Common {
 
   public void update(String name, String description) {
     boolean anyValueUpdated = false;
-    if (name != null && !description.isBlank()) {
+    if (name != null && !name.isBlank()) {
       this.name = name;
       anyValueUpdated = true;
     }
