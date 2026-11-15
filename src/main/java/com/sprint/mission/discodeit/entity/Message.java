@@ -4,6 +4,8 @@ import java.util.UUID;
 
 public class Message extends Common {
 
+  private static final long serialVersionUID = 1L;
+
   private String content;
   private UUID authorId;
   private UUID channelId;

@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.entity;
 
 public class User extends Common {
 
+  private static final long serialVersionUID = 1L;
+
   private String username;
   private String email;
   private String password;
@@ -24,7 +26,7 @@ public class User extends Common {
     return password;
   }
 
-  public void update(String username, String email, String passwrod) {
+  public void update(String username, String email, String password) {
     boolean anyValueUpdated = false;
     if (username != null && !username.isBlank()) {
       this.username = username;
@@ -34,8 +36,8 @@ public class User extends Common {
       this.email = email;
       anyValueUpdated = true;
     }
-    if (passwrod != null && !password.isBlank()) {
-      this.password = passwrod;
+    if (password != null && !password.isBlank()) {
+      this.password = password;
       anyValueUpdated = true;
     }
     if (anyValueUpdated) {
