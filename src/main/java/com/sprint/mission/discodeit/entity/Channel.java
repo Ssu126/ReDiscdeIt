@@ -10,6 +10,14 @@ public class Channel extends Common {
     this.description = description;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
   public void update(String name, String description) {
     boolean anyValueUpdated = false;
     if (name != null && !description.isBlank()) {
