@@ -21,7 +21,7 @@ public class JCFChannelService implements ChannelService {
   public Channel create(String name, String description) {
     Channel channel = new Channel(name, description);
     data.put(channel.getId(), channel);
-    return channel;
+    return data.get(channel.getId());
   }
 
   @Override
