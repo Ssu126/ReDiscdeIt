@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class UserStatus extends Common {
+public class UserStatus extends BaseUpdatableEntity {
 
   private static final long serialVersionUID = 1L;
 
@@ -21,8 +21,8 @@ public class UserStatus extends Common {
   public void update(Instant lastActiveAt) {
     if (lastActiveAt != null) {
       this.lastActiveAt = lastActiveAt;
+      updateTimestamp();
     }
-    updateTimestamp();
   }
 
   public boolean isOnline() {

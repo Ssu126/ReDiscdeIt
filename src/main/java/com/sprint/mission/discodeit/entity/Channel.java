@@ -3,7 +3,7 @@ package com.sprint.mission.discodeit.entity;
 import lombok.Getter;
 
 @Getter
-public class Channel extends Common {
+public class Channel extends BaseUpdatableEntity {
 
   private static final long serialVersionUID = 1L;
 

@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class ReadStatus extends Common {
+public class ReadStatus extends BaseUpdatableEntity {
 
   private static final long serialVersionUID = 1L;
 

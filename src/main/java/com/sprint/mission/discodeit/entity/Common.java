@@ -12,14 +12,9 @@ public abstract class Common implements Serializable {
 
   private final UUID id;
   private final Instant createdAt;
-  private Instant updatedAt;
 
   protected Common() {
     id = UUID.randomUUID();
     createdAt = Instant.now();
-  }
-
-  protected void updateTimestamp() {
-    updatedAt = Instant.now();
   }
 }
