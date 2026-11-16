@@ -44,7 +44,7 @@ bin/
 .DS_Store
 
 ### Mission ###
-MISSION.md
+MISSION/
 
 화### Data (File IO) ###
 data/
