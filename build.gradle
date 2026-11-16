@@ -5,8 +5,14 @@ plugins {
 
 spotless {
     java {
-        googleJavaFormat()
+        googleJavaFormat('1.28.0')
         removeUnusedImports()
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
