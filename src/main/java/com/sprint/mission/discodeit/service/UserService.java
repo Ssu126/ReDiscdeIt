@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public interface UserService {
 
-  User create(String username, String email, String password);
+  User create(String username, String email, String password, UUID profileId);
 
   User find(UUID id);
 
   List<User> findAll();
 
-  User update(UUID id, String username, String email, String password);
+  User update(UUID id, String username, String email, String password, UUID profileId);
 
   void delete(UUID id);
 }

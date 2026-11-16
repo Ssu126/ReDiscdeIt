@@ -20,7 +20,7 @@ public class BasicMessageService implements MessageService {
   private final ChannelRepository channelRepository;
 
   @Override
-  public Message create(String content, UUID authorId, UUID channelId) {
+  public Message create(String content, UUID authorId, UUID channelId, List<UUID> attachmentIds) {
     userRepository
         .findById(authorId)
         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 id: " + authorId));
@@ -29,7 +29,7 @@ public class BasicMessageService implements MessageService {
         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 채널 id: " + channelId));
     validateContent(content);
 
-    Message message = new Message(content, authorId, channelId);
+    Message message = new Message(content, authorId, channelId, attachmentIds);
     return messageRepository.save(message);
   }
 

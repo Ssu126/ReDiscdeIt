@@ -18,8 +18,8 @@ public class JCFUserService implements UserService {
   }
 
   @Override
-  public User create(String username, String email, String password) {
-    User user = new User(username, email, password);
+  public User create(String username, String email, String password, UUID profileId) {
+    User user = new User(username, email, password, profileId);
     data.put(user.getId(), user);
     return data.get(user.getId());
   }
@@ -35,9 +35,9 @@ public class JCFUserService implements UserService {
   }
 
   @Override
-  public User update(UUID id, String username, String email, String password) {
+  public User update(UUID id, String username, String email, String password, UUID profileId) {
     User user = findByIdOrThrow(id);
-    user.update(username, email, password);
+    user.update(username, email, password, profileId);
     return user;
   }
 

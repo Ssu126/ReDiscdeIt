@@ -42,12 +42,12 @@ public class FileMessageService implements MessageService {
   }
 
   @Override
-  public Message create(String content, UUID authorId, UUID channelId) {
+  public Message create(String content, UUID authorId, UUID channelId, List<UUID> attachmentIds) {
     userService.find(authorId);
     channelService.find(channelId);
     validateContent(content);
 
-    Message message = new Message(content, authorId, channelId);
+    Message message = new Message(content, authorId, channelId, attachmentIds);
     save(message);
     return message;
   }

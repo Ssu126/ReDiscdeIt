@@ -16,8 +16,8 @@ public class BasicUserService implements UserService {
   private final UserRepository userRepository;
 
   @Override
-  public User create(String username, String email, String password) {
-    User user = new User(username, email, password);
+  public User create(String username, String email, String password, UUID profileId) {
+    User user = new User(username, email, password, profileId);
     return userRepository.save(user);
   }
 
@@ -32,9 +32,9 @@ public class BasicUserService implements UserService {
   }
 
   @Override
-  public User update(UUID id, String username, String email, String password) {
+  public User update(UUID id, String username, String email, String password, UUID profileId) {
     User user = findUserOrThrow(id);
-    user.update(username, email, password);
+    user.update(username, email, password, profileId);
     return userRepository.save(user);
   }
 
