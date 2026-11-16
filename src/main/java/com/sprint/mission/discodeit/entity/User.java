@@ -1,5 +1,8 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
+@Getter
 public class User extends Common {
 
   private static final long serialVersionUID = 1L;
@@ -12,18 +15,6 @@ public class User extends Common {
     this.username = username;
     this.email = email;
     this.password = password;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public void update(String username, String email, String password) {
