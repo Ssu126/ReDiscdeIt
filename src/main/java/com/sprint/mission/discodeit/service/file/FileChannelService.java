@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.service.ChannelService;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,8 +35,8 @@ public class FileChannelService implements ChannelService {
   }
 
   @Override
-  public Channel create(String name, String description) {
-    Channel channel = new Channel(name, description);
+  public Channel create(String name, String description, ChannelType type) {
+    Channel channel = new Channel(name, description, type);
     save(channel);
     return channel;
   }

@@ -6,10 +6,12 @@ public class Channel extends Common {
 
   private String name;
   private String description;
+  private ChannelType type;
 
-  public Channel(String name, String description) {
+  public Channel(String name, String description, ChannelType type) {
     this.name = name;
     this.description = description;
+    this.type = type;
   }
 
   public String getName() {
@@ -18,6 +20,10 @@ public class Channel extends Common {
 
   public String getDescription() {
     return description;
+  }
+
+  public ChannelType getType() {
+    return type;
   }
 
   public void update(String name, String description) {
