@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JCFUserStatusRepository extends JCFRepository<UserStatus> implements
-    UserStatusRepository {
+public class JCFUserStatusRepository extends JCFRepository<UserStatus>
+    implements UserStatusRepository {
 
   @Override
   public Optional<UserStatus> findByUserId(UUID userId) {
@@ -16,5 +16,4 @@ public class JCFUserStatusRepository extends JCFRepository<UserStatus> implement
         .filter(userStatus -> userStatus.getUserId().equals(userId))
         .findFirst();
   }
-
 }

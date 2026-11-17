@@ -10,15 +10,15 @@ import java.util.UUID;
 
 public interface UserService {
 
-  UserResponse create(UserCreateRequest createRequest,
-      Optional<BinaryContentCreateRequest> profile);
+  UserResponse create(
+      UserCreateRequest createRequest, Optional<BinaryContentCreateRequest> profile);
 
   UserResponse find(UUID id);
 
   List<UserResponse> findAll();
 
-  UserResponse update(UUID id, UserUpdateRequest updateRequest,
-      Optional<BinaryContentCreateRequest> profile);
+  UserResponse update(
+      UUID id, UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile);
 
   void delete(UUID id);
 }

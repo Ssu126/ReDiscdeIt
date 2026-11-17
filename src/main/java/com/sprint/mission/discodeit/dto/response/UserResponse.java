@@ -11,8 +11,7 @@ public record UserResponse(
     UUID profileId,
     boolean online,
     Instant createAt,
-    Instant updateAt
-) {
+    Instant updateAt) {
 
   public static UserResponse toResponse(User user, boolean isOnline) {
     return new UserResponse(
@@ -22,8 +21,6 @@ public record UserResponse(
         user.getProfileId(),
         isOnline,
         user.getCreatedAt(),
-        user.getUpdatedAt()
-    );
+        user.getUpdatedAt());
   }
-
 }

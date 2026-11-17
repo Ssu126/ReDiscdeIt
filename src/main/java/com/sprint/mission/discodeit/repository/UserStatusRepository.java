@@ -7,5 +7,4 @@ import java.util.UUID;
 public interface UserStatusRepository extends CrudRepository<UserStatus> {
 
   Optional<UserStatus> findByUserId(UUID userId);
-
 }

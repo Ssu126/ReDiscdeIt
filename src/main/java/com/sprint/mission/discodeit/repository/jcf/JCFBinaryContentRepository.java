@@ -5,7 +5,5 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JCFBinaryContentRepository extends JCFRepository<BinaryContent> implements
-    BinaryContentRepository {
-
-}
+public class JCFBinaryContentRepository extends JCFRepository<BinaryContent>
+    implements BinaryContentRepository {}

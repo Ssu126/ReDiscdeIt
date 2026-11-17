@@ -5,6 +5,4 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JCFChannelRepository extends JCFRepository<Channel> implements ChannelRepository {
-
-}
+public class JCFChannelRepository extends JCFRepository<Channel> implements ChannelRepository {}
