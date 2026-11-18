@@ -1,12 +1,16 @@
 package com.sprint.mission.discodeit;
 
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
+import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.response.ChannelResponse;
+import com.sprint.mission.discodeit.dto.response.MessageResponse;
+import com.sprint.mission.discodeit.dto.response.UserResponse;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,32 +18,37 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class DiscodeitApplication {
 
-  static User setupUser(UserService userService) {
-    User user = userService.create("woody", "woody@codeit.com", "woody1234");
+  static UserResponse setupUser(UserService userService) {
+    UserResponse user =
+        userService.create(
+            new UserCreateRequest("woody", "woody@codeit.com", "woody1234"), Optional.empty());
     return user;
   }
 
-  static Channel setupChannel(ChannelService channelService) {
-    Channel channel = channelService.create("공지", "공지 채널입니다.", ChannelType.PUBLIC);
+  static ChannelResponse setupChannel(ChannelService channelService) {
+    ChannelResponse channel =
+        channelService.createPublic(new PublicChannelCreateRequest("공지", "공지 채널입니다."));
     return channel;
   }
 
-  static void messageCreateTest(MessageService messageService, Channel channel, User author) {
-    Message message = messageService.create("안녕하세요.", author.getId(), channel.getId());
-    System.out.println("메시지 생성: " + message.getId());
+  static void messageCreateTest(
+      MessageService messageService, ChannelResponse channel, UserResponse author) {
+    MessageResponse message =
+        messageService.create(
+            new MessageCreateRequest("안녕하세요.", author.id(), channel.id()), List.of());
+    System.out.println("메시지 생성: " + message.id());
   }
 
   public static void main(String[] args) {
     ConfigurableApplicationContext context =
         SpringApplication.run(DiscodeitApplication.class, args);
 
-    // 서비스 초기화: Spring Context에서 Bean 조회
     UserService userService = context.getBean(UserService.class);
     ChannelService channelService = context.getBean(ChannelService.class);
     MessageService messageService = context.getBean(MessageService.class);
 
-    User user = setupUser(userService);
-    Channel channel = setupChannel(channelService);
+    UserResponse user = setupUser(userService);
+    ChannelResponse channel = setupChannel(channelService);
 
     messageCreateTest(messageService, channel, user);
   }
