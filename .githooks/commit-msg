@@ -1,0 +1,21 @@
+#!/bin/sh
+
+MSG_FILE="$1"
+FIRST_LINE=$(head -n 1 "$MSG_FILE")
+
+case "$FIRST_LINE" in
+  Merge*|Revert*|fixup!*|squash!*) exit 0 ;;
+esac
+
+PATTERN='^(feat|fix|refactor|chore|style|docs|test)(\([A-Za-z0-9_-]+\))?: .+'
+
+if ! echo "$FIRST_LINE" | grep -Eq "$PATTERN"; then
+  echo ""
+  echo "❌ 커밋 메시지 형식이 올바르지 않습니다."
+  echo "   형식: type(scope): 설명   (scope는 생략 가능)"
+  echo "   type: feat | fix | refactor | chore | style | docs | test"
+  echo "   예시: feat(service): UserService 고도화"
+  echo ""
+  echo "   입력한 메시지: $FIRST_LINE"
+  exit 1
+fi

@@ -20,8 +20,8 @@ public abstract class FileRepository<T extends Common> implements CrudRepository
   private final Path directory;
   private final Class<T> type;
 
-  protected FileRepository(String directoryName, Class<T> type) {
-    this.directory = Paths.get(System.getProperty("user.dir"), "data", directoryName);
+  protected FileRepository(String fileDirectory, String directoryName, Class<T> type) {
+    this.directory = Paths.get(fileDirectory, directoryName);
     this.type = type;
 
     try {

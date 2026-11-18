@@ -1,6 +1,9 @@
 package com.sprint.mission.discodeit.entity;
 
-public class Channel extends Common {
+import lombok.Getter;
+
+@Getter
+public class Channel extends BaseUpdatableEntity {
 
   private static final long serialVersionUID = 1L;
 
@@ -12,18 +15,6 @@ public class Channel extends Common {
     this.name = name;
     this.description = description;
     this.type = type;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public ChannelType getType() {
-    return type;
   }
 
   public void update(String name, String description) {
