@@ -6,5 +6,13 @@ import java.util.UUID;
 
 public interface UserStatusRepository extends CrudRepository<UserStatus> {
 
-  Optional<UserStatus> findByUserId(UUID userId);
+  default Optional<UserStatus> findByUserId(UUID userId) {
+    return findAll().stream()
+        .filter(userStatus -> userStatus.getUserId().equals(userId))
+        .findFirst();
+  }
+
+  default boolean existsByUserId(UUID userId) {
+    return findAll().stream().anyMatch(userStatus -> userStatus.getUserId().equals(userId));
+  }
 }
