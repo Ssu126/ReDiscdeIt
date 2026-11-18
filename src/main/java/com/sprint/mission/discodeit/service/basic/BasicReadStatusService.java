@@ -85,6 +85,6 @@ public class BasicReadStatusService implements ReadStatusService {
   private ReadStatus findReadStatusOrThrow(UUID id) {
     return readStatusRepository
         .findById(id)
-        .orElseThrow(() -> new NoSuchElementException("존재하지 않 읽음 상태 id: " + id));
+        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 읽음 상태 id: " + id));
   }
 }

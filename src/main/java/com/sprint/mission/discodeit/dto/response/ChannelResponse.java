@@ -17,13 +17,13 @@ public record ChannelResponse(
     Instant updatedAt) {
 
   public static ChannelResponse toResponse(
-      Channel channel, Instant lsatMessagedAt, List<UUID> participantIds) {
+      Channel channel, Instant lastMessagedAt, List<UUID> participantIds) {
     return new ChannelResponse(
         channel.getId(),
         channel.getName(),
         channel.getDescription(),
         channel.getType(),
-        lsatMessagedAt,
+        lastMessagedAt,
         participantIds,
         channel.getCreatedAt(),
         channel.getUpdatedAt());

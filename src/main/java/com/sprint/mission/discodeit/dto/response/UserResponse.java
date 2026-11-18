@@ -10,8 +10,8 @@ public record UserResponse(
     String email,
     UUID profileId,
     boolean online,
-    Instant createAt,
-    Instant updateAt) {
+    Instant createdAt,
+    Instant updatedAt) {
 
   public static UserResponse toResponse(User user, boolean isOnline) {
     return new UserResponse(
