@@ -29,4 +29,10 @@ public class BinaryContentController {
       @RequestParam("binaryContentIds") List<UUID> binaryContentIds) {
     return ResponseEntity.ok(binaryContentService.findAllByIdIn(binaryContentIds));
   }
+
+  @RequestMapping(value = "/find", method = RequestMethod.GET)
+  public ResponseEntity<BinaryContentResponse> findForView(
+      @RequestParam("binaryContentId") UUID binaryContentId) {
+    return ResponseEntity.ok(binaryContentService.find(binaryContentId));
+  }
 }
