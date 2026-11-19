@@ -49,8 +49,8 @@ public class UserController {
       @RequestPart("userUpdateRequest") UserUpdateRequest request,
       @RequestPart(value = "profile", required = false) MultipartFile profile)
       throws IOException {
-    UserUpdateRequest updated = new UserUpdateRequest(userId, request.email(), request.password());
-    return ResponseEntity.ok(userService.update(updated, toProfileRequest(profile)));
+    UserUpdateRequest withId = new UserUpdateRequest(userId, request.email(), request.password());
+    return ResponseEntity.ok(userService.update(withId, toProfileRequest(profile)));
   }
 
   @RequestMapping(value = "/{userId}/userStatus", method = RequestMethod.PATCH)
