@@ -64,6 +64,11 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<List<UserResponse>> findAll() {
+    return ResponseEntity.ok(userService.findAll());
+  }
+
   @RequestMapping(value = "/findAll", method = RequestMethod.GET)
   public ResponseEntity<List<UserResponse>> findAllForView() {
     return ResponseEntity.ok(userService.findAll());
