@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discodeit 사용자</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #f2f3f5;
+      color: #2e3338;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+    }
+
+    .card img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .name {
+      font-weight: 600;
+    }
+
+    .email {
+      font-size: 13px;
+      color: #747f8d;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .online {
+      background: #e3f7ea;
+      color: #23a55a;
+    }
+
+    .offline {
+      background: #eceef1;
+      color: #80848e;
+    }
+
+    .empty {
+      color: #80848e;
+      text-align: center;
+      padding: 24px;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>사용자 목록</h1>
+  <div id="list"><p class="empty">불러오는 중…</p></div>
+</main>
+<script>
+  const list = document.getElementById('list');
+
+  async function profileSrc(profileId) {
+    if (!profileId) {
+      return '/default-avatar.png';
+    }
+    try {
+      const res = await fetch(
+          `/api/binaryContent/find?binaryContentId=${encodeURIComponent(profileId)}`);
+      if (!res.ok) {
+        throw new Error();
+      }
+      const p = await res.json();
+      return `data:${p.contentType};base64,${p.bytes}`;
+    } catch {
+      return '/default-avatar.png';
+    }
+  }
+
+  async function render() {
+    try {
+      const res = await fetch('/api/user/findAll');
+      if (!res.ok) {
+        throw new Error();
+      }
+      const users = await res.json();
+      list.replaceChildren();
+      if (users.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'empty';
+        p.textContent = '등록된 사용자가 없습니다.';
+        list.append(p);
+        return;
+      }
+      for (const u of users) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const img = document.createElement('img');
+        img.alt = u.username;
+        img.src = await profileSrc(u.profileId);
+        const info = document.createElement('div');
+        info.className = 'info';
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = u.username;
+        const email = document.createElement('div');
+        email.className = 'email';
+        email.textContent = u.email;
+        const badge = document.createElement('span');
+        badge.className = `badge ${u.online ? 'online' : 'offline'}`;
+        badge.textContent = u.online ? '온라인' : '오프라인';
+        info.append(name, email);
+        card.append(img, info, badge);
+        list.append(card);
+      }
+    } catch {
+      list.innerHTML = '<p class="empty">사용자 목록을 불러오지 못했습니다.</p>';
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
