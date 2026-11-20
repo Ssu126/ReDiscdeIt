@@ -10,13 +10,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 public abstract class FileRepository<T extends Common> implements CrudRepository<T> {
 
   private static final String EXTENSION = ".ser";
+  private static final Map<Path, ReentrantLock> LOCKS = new ConcurrentHashMap<>();
   private final Path directory;
   private final Class<T> type;
 
@@ -34,11 +38,15 @@ public abstract class FileRepository<T extends Common> implements CrudRepository
   @Override
   public T save(T entity) {
     Path path = resolvePath(entity.getId());
+    ReentrantLock lock = lockOf(path);
+    lock.lock();
     try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(path))) {
       oos.writeObject(entity);
       return entity;
     } catch (IOException e) {
       throw new UncheckedIOException("저장 실패: " + path, e);
+    } finally {
+      lock.unlock();
     }
   }
 
@@ -67,10 +75,15 @@ public abstract class FileRepository<T extends Common> implements CrudRepository
 
   @Override
   public void deleteById(UUID id) {
+    Path path = resolvePath(id);
+    ReentrantLock lock = lockOf(path);
+    lock.lock();
     try {
-      Files.deleteIfExists(resolvePath(id));
+      Files.deleteIfExists(path);
     } catch (IOException e) {
       throw new UncheckedIOException("삭제 실패: " + id, e);
+    } finally {
+      lock.unlock();
     }
   }
 
@@ -78,13 +91,22 @@ public abstract class FileRepository<T extends Common> implements CrudRepository
     return directory.resolve(id + EXTENSION);
   }
 
+  // EOFException이 날 수 있어 파일별로 잠근다.
+  private ReentrantLock lockOf(Path path) {
+    return LOCKS.computeIfAbsent(path, k -> new ReentrantLock());
+  }
+
   private T read(Path path) {
+    ReentrantLock lock = lockOf(path);
+    lock.lock();
     try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
       return type.cast(ois.readObject());
     } catch (IOException e) {
       throw new UncheckedIOException("읽기 실패: " + path, e);
     } catch (ClassNotFoundException e) {
       throw new IllegalStateException("역직렬화 실패: " + path, e);
+    } finally {
+      lock.unlock();
     }
   }
 }
