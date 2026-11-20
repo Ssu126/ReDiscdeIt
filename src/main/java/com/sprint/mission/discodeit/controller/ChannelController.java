@@ -39,9 +39,7 @@ public class ChannelController {
   @RequestMapping(value = "/{channelId}", method = RequestMethod.PATCH)
   public ResponseEntity<ChannelResponse> update(
       @PathVariable UUID channelId, @RequestBody ChannelUpdateRequest request) {
-    ChannelUpdateRequest withId =
-        new ChannelUpdateRequest(channelId, request.name(), request.description());
-    return ResponseEntity.ok(channelService.update(withId));
+    return ResponseEntity.ok(channelService.update(channelId, request));
   }
 
   @RequestMapping(value = "/{channelId}", method = RequestMethod.DELETE)

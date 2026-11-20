@@ -77,14 +77,14 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
-  public ChannelResponse update(ChannelUpdateRequest request) {
-    Channel channel = findChannelOrThrow(request.id());
+  public ChannelResponse update(UUID id, ChannelUpdateRequest request) {
+    Channel channel = findChannelOrThrow(id);
 
     if (channel.getType() == ChannelType.PRIVATE) {
       throw new IllegalArgumentException("PRIVATE 채널은 수정할 수 없습니다: " + channel.getId());
     }
 
-    channel.update(request.name(), request.description());
+    channel.update(request.newName(), request.newDescription());
     Channel updated = channelRepository.save(channel);
     return ChannelResponse.toResponse(
         updated, findLastMessageAt(updated), findParticipantIds(updated));
