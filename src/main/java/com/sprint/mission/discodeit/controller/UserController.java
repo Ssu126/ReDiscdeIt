@@ -69,6 +69,11 @@ public class UserController {
     return ResponseEntity.ok(userService.findAll());
   }
 
+  @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+  public ResponseEntity<List<UserResponse>> findAllForView() {
+    return ResponseEntity.ok(userService.findAll());
+  }
+
   private Optional<BinaryContentCreateRequest> toProfileRequest(MultipartFile profile)
       throws IOException {
     if (profile == null || profile.isEmpty()) {

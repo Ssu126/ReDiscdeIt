@@ -25,12 +25,14 @@ public class ChannelController {
   private final ChannelService channelService;
 
   @RequestMapping(value = "/public", method = RequestMethod.POST)
-  public ResponseEntity<ChannelResponse> create(@RequestBody PublicChannelCreateRequest request) {
+  public ResponseEntity<ChannelResponse> createPublic(
+      @RequestBody PublicChannelCreateRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(channelService.createPublic(request));
   }
 
   @RequestMapping(value = "/private", method = RequestMethod.POST)
-  public ResponseEntity<ChannelResponse> create(@RequestBody PrivateChannelCreateRequest request) {
+  public ResponseEntity<ChannelResponse> createPrivate(
+      @RequestBody PrivateChannelCreateRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(channelService.createPrivate(request));
   }
 
