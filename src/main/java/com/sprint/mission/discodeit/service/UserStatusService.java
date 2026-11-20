@@ -15,7 +15,7 @@ public interface UserStatusService {
 
   List<UserStatusResponse> findAll();
 
-  UserStatusResponse update(UserStatusUpdateRequest request);
+  UserStatusResponse update(UUID id, UserStatusUpdateRequest request);
 
   UserStatusResponse updateByUserId(UUID userId, Instant lastActiveAt);
 

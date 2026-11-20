@@ -18,7 +18,7 @@ public interface UserService {
   List<UserResponse> findAll();
 
   UserResponse update(
-      UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile);
+      UUID id, UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile);
 
   void delete(UUID id);
 }

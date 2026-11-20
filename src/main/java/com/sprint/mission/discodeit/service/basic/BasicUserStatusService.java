@@ -45,10 +45,10 @@ public class BasicUserStatusService implements UserStatusService {
   }
 
   @Override
-  public UserStatusResponse update(UserStatusUpdateRequest request) {
-    UserStatus userStatus = findUserStatusOrThrow(request.id());
+  public UserStatusResponse update(UUID id, UserStatusUpdateRequest request) {
+    UserStatus userStatus = findUserStatusOrThrow(id);
 
-    userStatus.update(request.lastActiveAt());
+    userStatus.update(request.newLastActiveAt());
     UserStatus updated = userStatusRepository.save(userStatus);
 
     return UserStatusResponse.toResponse(updated);

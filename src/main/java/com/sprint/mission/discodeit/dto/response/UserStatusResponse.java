@@ -5,7 +5,12 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record UserStatusResponse(
-    UUID id, UUID userId, Instant lastActiveAt, Instant createdAt, Instant updatedAt) {
+    UUID id,
+    UUID userId,
+    Instant lastActiveAt,
+    Instant createdAt,
+    Instant updatedAt,
+    boolean online) {
 
   public static UserStatusResponse toResponse(UserStatus userStatus) {
     return new UserStatusResponse(
@@ -13,6 +18,7 @@ public record UserStatusResponse(
         userStatus.getUserId(),
         userStatus.getLastActiveAt(),
         userStatus.getCreatedAt(),
-        userStatus.getUpdatedAt());
+        userStatus.getUpdatedAt(),
+        userStatus.isOnline());
   }
 }
