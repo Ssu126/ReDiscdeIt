@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/binaryContent")
+@RequestMapping("/api/binaryContents")
 public class BinaryContentController {
 
   private final BinaryContentService binaryContentService;
@@ -28,11 +28,5 @@ public class BinaryContentController {
   public ResponseEntity<List<BinaryContentResponse>> findAllByIdIn(
       @RequestParam("binaryContentIds") List<UUID> binaryContentIds) {
     return ResponseEntity.ok(binaryContentService.findAllByIdIn(binaryContentIds));
-  }
-
-  @RequestMapping(value = "/find", method = RequestMethod.GET)
-  public ResponseEntity<BinaryContentResponse> findForView(
-      @RequestParam("binaryContentId") UUID binaryContentId) {
-    return ResponseEntity.ok(binaryContentService.find(binaryContentId));
   }
 }

@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
   private final UserService userService;
@@ -66,11 +66,6 @@ public class UserController {
 
   @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<List<UserResponse>> findAll() {
-    return ResponseEntity.ok(userService.findAll());
-  }
-
-  @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-  public ResponseEntity<List<UserResponse>> findAllForView() {
     return ResponseEntity.ok(userService.findAll());
   }
 
