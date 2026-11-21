@@ -66,10 +66,16 @@ public class BasicUserService implements UserService {
 
   @Override
   public UserResponse update(
-      UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile) {
-    User user = findUserOrThrow(updateRequest.id());
-    if (updateRequest.email() != null && !updateRequest.email().equals(user.getEmail())) {
-      validateDuplicateEmail(updateRequest.email());
+      UUID id, UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile) {
+    User user = findUserOrThrow(id);
+
+    if (updateRequest.newUsername() != null
+        && !updateRequest.newUsername().equals(user.getUsername())) {
+      validateDuplicateUsername(updateRequest.newUsername());
+    }
+
+    if (updateRequest.newEmail() != null && !updateRequest.newEmail().equals(user.getEmail())) {
+      validateDuplicateEmail(updateRequest.newEmail());
     }
 
     UUID newProfileId = null;
@@ -81,11 +87,14 @@ public class BasicUserService implements UserService {
       }
     }
 
-    user.update(user.getUsername(), updateRequest.email(), updateRequest.password(), newProfileId);
+    user.update(
+        updateRequest.newUsername(),
+        updateRequest.newEmail(),
+        updateRequest.newPassword(),
+        newProfileId);
     User updatedUser = userRepository.save(user);
 
-    boolean online =
-        statusRepository.findByUserId(updateRequest.id()).map(UserStatus::isOnline).orElse(false);
+    boolean online = statusRepository.findByUserId(id).map(UserStatus::isOnline).orElse(false);
     return UserResponse.toResponse(updatedUser, online);
   }
 

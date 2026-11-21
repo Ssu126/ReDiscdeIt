@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/message")
+@RequestMapping("/api/messages")
 public class MessageController {
 
   private final MessageService messageService;
@@ -41,8 +41,7 @@ public class MessageController {
   @RequestMapping(value = "/{messageId}", method = RequestMethod.PATCH)
   public ResponseEntity<MessageResponse> update(
       @PathVariable UUID messageId, @RequestBody MessageUpdateRequest request) {
-    MessageUpdateRequest withId = new MessageUpdateRequest(messageId, request.content());
-    return ResponseEntity.ok(messageService.update(withId));
+    return ResponseEntity.ok(messageService.update(messageId, request));
   }
 
   @RequestMapping(value = "/{messageId}", method = RequestMethod.DELETE)

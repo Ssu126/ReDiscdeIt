@@ -2,13 +2,13 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
+import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.UserResponse;
 import com.sprint.mission.discodeit.dto.response.UserStatusResponse;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -25,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
   private final UserService userService;
@@ -49,13 +50,13 @@ public class UserController {
       @RequestPart("userUpdateRequest") UserUpdateRequest request,
       @RequestPart(value = "profile", required = false) MultipartFile profile)
       throws IOException {
-    UserUpdateRequest withId = new UserUpdateRequest(userId, request.email(), request.password());
-    return ResponseEntity.ok(userService.update(withId, toProfileRequest(profile)));
+    return ResponseEntity.ok(userService.update(userId, request, toProfileRequest(profile)));
   }
 
   @RequestMapping(value = "/{userId}/userStatus", method = RequestMethod.PATCH)
-  public ResponseEntity<UserStatusResponse> updateUserStatus(@PathVariable UUID userId) {
-    return ResponseEntity.ok(userStatusService.updateByUserId(userId, Instant.now()));
+  public ResponseEntity<UserStatusResponse> updateUserStatus(
+      @PathVariable UUID userId, @RequestBody UserStatusUpdateRequest request) {
+    return ResponseEntity.ok(userStatusService.updateByUserId(userId, request.newLastActiveAt()));
   }
 
   @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
@@ -66,11 +67,6 @@ public class UserController {
 
   @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<List<UserResponse>> findAll() {
-    return ResponseEntity.ok(userService.findAll());
-  }
-
-  @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-  public ResponseEntity<List<UserResponse>> findAllForView() {
     return ResponseEntity.ok(userService.findAll());
   }
 

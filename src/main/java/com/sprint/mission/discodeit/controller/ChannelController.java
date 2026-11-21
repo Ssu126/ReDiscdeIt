@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/channel")
+@RequestMapping("/api/channels")
 public class ChannelController {
 
   private final ChannelService channelService;
@@ -39,9 +39,7 @@ public class ChannelController {
   @RequestMapping(value = "/{channelId}", method = RequestMethod.PATCH)
   public ResponseEntity<ChannelResponse> update(
       @PathVariable UUID channelId, @RequestBody ChannelUpdateRequest request) {
-    ChannelUpdateRequest withId =
-        new ChannelUpdateRequest(channelId, request.name(), request.description());
-    return ResponseEntity.ok(channelService.update(withId));
+    return ResponseEntity.ok(channelService.update(channelId, request));
   }
 
   @RequestMapping(value = "/{channelId}", method = RequestMethod.DELETE)
