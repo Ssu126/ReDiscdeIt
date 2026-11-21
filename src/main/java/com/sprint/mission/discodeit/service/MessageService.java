@@ -16,7 +16,7 @@ public interface MessageService {
 
   List<MessageResponse> findAllByChannelId(UUID channelId);
 
-  MessageResponse update(MessageUpdateRequest request);
+  MessageResponse update(UUID id, MessageUpdateRequest request);
 
   void delete(UUID id);
 }

@@ -71,11 +71,11 @@ public class BasicMessageService implements MessageService {
   }
 
   @Override
-  public MessageResponse update(MessageUpdateRequest request) {
-    Message message = findMessageOrThrow(request.id());
-    validateContent(request.content());
+  public MessageResponse update(UUID id, MessageUpdateRequest request) {
+    Message message = findMessageOrThrow(id);
+    validateContent(request.newContent());
 
-    message.update(request.content());
+    message.update(request.newContent());
     messageRepository.save(message);
 
     return MessageResponse.toResponse(message);
