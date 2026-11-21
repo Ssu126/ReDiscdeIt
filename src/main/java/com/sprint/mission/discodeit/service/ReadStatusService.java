@@ -14,7 +14,7 @@ public interface ReadStatusService {
 
   List<ReadStatusResponse> findAllByUserId(UUID userId);
 
-  ReadStatusResponse update(ReadStatusUpdateRequest request);
+  ReadStatusResponse update(UUID id, ReadStatusUpdateRequest request);
 
   void delete(UUID id);
 }
