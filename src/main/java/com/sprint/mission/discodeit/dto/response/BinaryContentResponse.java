@@ -5,12 +5,12 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record BinaryContentResponse(
-    UUID id, String filename, String contentType, Long size, byte[] bytes, Instant createdAt) {
+    UUID id, String fileName, String contentType, Long size, byte[] bytes, Instant createdAt) {
 
   public static BinaryContentResponse toResponse(BinaryContent binaryContent) {
     return new BinaryContentResponse(
         binaryContent.getId(),
-        binaryContent.getFilename(),
+        binaryContent.getFileName(),
         binaryContent.getContentType(),
         binaryContent.getSize(),
         binaryContent.getBytes(),
