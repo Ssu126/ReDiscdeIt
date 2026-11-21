@@ -39,13 +39,14 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   public ChannelResponse createPrivate(PrivateChannelCreateRequest request) {
-    Instant now = Instant.now();
-
     Channel channel = channelRepository.save(new Channel(null, null, ChannelType.PRIVATE));
 
     request
         .participantIds()
-        .forEach(userId -> readStatusRepository.save(new ReadStatus(userId, channel.getId(), now)));
+        .forEach(
+            userId ->
+                readStatusRepository.save(
+                    new ReadStatus(userId, channel.getId(), channel.getCreatedAt())));
 
     return ChannelResponse.toResponse(channel, null, request.participantIds());
   }
