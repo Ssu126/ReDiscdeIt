@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.response.UserResponse;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,11 @@ public class BasicAuthService implements AuthService {
     User user =
         userRepository
             .findByUsername(request.username())
-            .filter(u -> u.getPassword().equals(request.password()))
-            .orElseThrow(() -> new IllegalArgumentException("이름 또는 비밀번호가 일치하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다: " + request.username()));
+
+    if (!user.getPassword().equals(request.password())) {
+      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    }
 
     return UserResponse.toResponse(user, true);
   }
