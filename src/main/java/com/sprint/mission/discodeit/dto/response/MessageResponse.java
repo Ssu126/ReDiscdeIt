@@ -19,7 +19,7 @@ public record MessageResponse(
     return new MessageResponse(
         message.getId(),
         message.getContent(),
-        message.getAuthor().getId(),
+        message.getAuthor() == null ? null : message.getAuthor().getId(),
         message.getChannel().getId(),
         message.getAttachments().stream().map(BinaryContent::getId).toList(),
         message.getCreatedAt(),

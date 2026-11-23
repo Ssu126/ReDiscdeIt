@@ -18,7 +18,7 @@ public record UserResponse(
         user.getId(),
         user.getUsername(),
         user.getEmail(),
-        user.getProfile().getId(),
+        user.getProfile() == null ? null : user.getProfile().getId(),
         isOnline,
         user.getCreatedAt(),
         user.getUpdatedAt());
