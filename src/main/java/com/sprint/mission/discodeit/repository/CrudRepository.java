@@ -1,11 +1,11 @@
 package com.sprint.mission.discodeit.repository;
 
-import com.sprint.mission.discodeit.entity.Common;
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface CrudRepository<T extends Common> {
+public interface CrudRepository<T extends BaseEntity> {
 
   T save(T entity);
 

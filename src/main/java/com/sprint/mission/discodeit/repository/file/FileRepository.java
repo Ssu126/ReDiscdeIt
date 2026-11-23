@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Common;
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
 import com.sprint.mission.discodeit.repository.CrudRepository;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
-public abstract class FileRepository<T extends Common> implements CrudRepository<T> {
+public abstract class FileRepository<T extends BaseEntity> implements CrudRepository<T> {
 
   private static final String EXTENSION = ".ser";
   private static final Map<Path, ReentrantLock> LOCKS = new ConcurrentHashMap<>();
