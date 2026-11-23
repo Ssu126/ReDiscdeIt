@@ -2,18 +2,14 @@ package com.sprint.mission.discodeit.repository;
 
 import com.sprint.mission.discodeit.entity.User;
 import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends CrudRepository<User> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
-  default boolean existsByUsername(String username) {
-    return findAll().stream().anyMatch(user -> user.getUsername().equals(username));
-  }
+  boolean existsByUsername(String username);
 
-  default boolean existsByEmail(String email) {
-    return findAll().stream().anyMatch(user -> user.getEmail().equals(email));
-  }
+  boolean existsByEmail(String email);
 
-  default Optional<User> findByUsername(String username) {
-    return findAll().stream().filter(user -> user.getUsername().equals(username)).findFirst();
-  }
+  Optional<User> findByUsername(String username);
 }

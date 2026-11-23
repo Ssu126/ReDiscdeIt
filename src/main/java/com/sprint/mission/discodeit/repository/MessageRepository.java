@@ -3,16 +3,11 @@ package com.sprint.mission.discodeit.repository;
 import com.sprint.mission.discodeit.entity.Message;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MessageRepository extends CrudRepository<Message> {
+public interface MessageRepository extends JpaRepository<Message, UUID> {
 
-  default List<Message> findAllByChannelId(UUID channelId) {
-    return findAll().stream()
-        .filter(message -> message.getChannel().getId().equals(channelId))
-        .toList();
-  }
+  List<Message> findAllByChannelId(UUID channelId);
 
-  default void deleteByChannelId(UUID channelId) {
-    findAllByChannelId(channelId).forEach(message -> deleteById(message.getId()));
-  }
+  void deleteByChannelId(UUID channelId);
 }

@@ -21,8 +21,3 @@ logging:
 
 server:
   port: ${PORT:8080}
-
-discodeit:
-  repository:
-    type: file # jcf | file
-    file-directory: .discodeit
