@@ -20,7 +20,6 @@ public class UserStatus extends BaseUpdatableEntity {
   public void update(Instant lastActiveAt) {
     if (lastActiveAt != null) {
       this.lastActiveAt = lastActiveAt;
-      updateTimestamp();
     }
   }
 

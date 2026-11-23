@@ -21,13 +21,8 @@ public class Message extends BaseUpdatableEntity {
   }
 
   public void update(String content) {
-    boolean anyValueUpdated = false;
     if (content != null && !content.isBlank()) {
       this.content = content;
-      anyValueUpdated = true;
-    }
-    if (anyValueUpdated) {
-      updateTimestamp();
     }
   }
 }

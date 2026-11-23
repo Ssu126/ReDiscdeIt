@@ -17,17 +17,11 @@ public class Channel extends BaseUpdatableEntity {
   }
 
   public void update(String name, String description) {
-    boolean anyValueUpdated = false;
     if (name != null && !name.isBlank()) {
       this.name = name;
-      anyValueUpdated = true;
     }
     if (description != null && !description.isBlank()) {
       this.description = description;
-      anyValueUpdated = true;
-    }
-    if (anyValueUpdated) {
-      updateTimestamp();
     }
   }
 }
