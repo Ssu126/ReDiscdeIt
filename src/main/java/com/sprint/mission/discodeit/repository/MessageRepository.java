@@ -7,7 +7,9 @@ import java.util.UUID;
 public interface MessageRepository extends CrudRepository<Message> {
 
   default List<Message> findAllByChannelId(UUID channelId) {
-    return findAll().stream().filter(message -> message.getChannelId().equals(channelId)).toList();
+    return findAll().stream()
+        .filter(message -> message.getChannel().getId().equals(channelId))
+        .toList();
   }
 
   default void deleteByChannelId(UUID channelId) {

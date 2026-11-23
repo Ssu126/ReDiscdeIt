@@ -8,11 +8,11 @@ public interface UserStatusRepository extends CrudRepository<UserStatus> {
 
   default Optional<UserStatus> findByUserId(UUID userId) {
     return findAll().stream()
-        .filter(userStatus -> userStatus.getUserId().equals(userId))
+        .filter(userStatus -> userStatus.getUser().getId().equals(userId))
         .findFirst();
   }
 
   default boolean existsByUserId(UUID userId) {
-    return findAll().stream().anyMatch(userStatus -> userStatus.getUserId().equals(userId));
+    return findAll().stream().anyMatch(userStatus -> userStatus.getUser().getId().equals(userId));
   }
 }

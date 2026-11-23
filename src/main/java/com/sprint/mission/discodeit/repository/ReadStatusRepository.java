@@ -8,12 +8,14 @@ public interface ReadStatusRepository extends CrudRepository<ReadStatus> {
 
   default List<ReadStatus> findAllByChannelId(UUID channelId) {
     return findAll().stream()
-        .filter(readStatus -> readStatus.getChannelId().equals(channelId))
+        .filter(readStatus -> readStatus.getChannel().getId().equals(channelId))
         .toList();
   }
 
   default List<ReadStatus> findAllByUserId(UUID userId) {
-    return findAll().stream().filter(readStatus -> readStatus.getUserId().equals(userId)).toList();
+    return findAll().stream()
+        .filter(readStatus -> readStatus.getUser().getId().equals(userId))
+        .toList();
   }
 
   default void deleteByChannelId(UUID channelId) {
@@ -24,7 +26,7 @@ public interface ReadStatusRepository extends CrudRepository<ReadStatus> {
     return findAll().stream()
         .anyMatch(
             readStatus ->
-                readStatus.getUserId().equals(userId)
-                    && readStatus.getChannelId().equals(channelId));
+                readStatus.getUser().getId().equals(userId)
+                    && readStatus.getChannel().getId().equals(channelId));
   }
 }
