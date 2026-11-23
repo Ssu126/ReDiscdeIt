@@ -15,7 +15,7 @@ public record UserStatusResponse(
   public static UserStatusResponse toResponse(UserStatus userStatus) {
     return new UserStatusResponse(
         userStatus.getId(),
-        userStatus.getUserId(),
+        userStatus.getUser().getId(),
         userStatus.getLastActiveAt(),
         userStatus.getCreatedAt(),
         userStatus.getUpdatedAt(),
