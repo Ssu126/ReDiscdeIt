@@ -8,9 +8,11 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.ReadStatus;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import java.time.Instant;
 import java.util.Comparator;
@@ -27,6 +29,7 @@ public class BasicChannelService implements ChannelService {
   private final ChannelRepository channelRepository;
   private final ReadStatusRepository readStatusRepository;
   private final MessageRepository messageRepository;
+  private final UserRepository userRepository;
 
   @Override
   public ChannelResponse createPublic(PublicChannelCreateRequest request) {
@@ -46,7 +49,7 @@ public class BasicChannelService implements ChannelService {
         .forEach(
             userId ->
                 readStatusRepository.save(
-                    new ReadStatus(userId, channel.getId(), channel.getCreatedAt())));
+                    new ReadStatus(findUserOrThrow(userId), channel, channel.getCreatedAt())));
 
     return ChannelResponse.toResponse(channel, null, request.participantIds());
   }
@@ -63,7 +66,7 @@ public class BasicChannelService implements ChannelService {
   public List<ChannelResponse> findAllByUserId(UUID userId) {
     List<UUID> joinedChannelIds =
         readStatusRepository.findAllByUserId(userId).stream()
-            .map(ReadStatus::getChannelId)
+            .map(readStatus -> readStatus.getChannel().getId())
             .toList();
     return channelRepository.findAll().stream()
         .filter(
@@ -100,6 +103,12 @@ public class BasicChannelService implements ChannelService {
     channelRepository.deleteById(id);
   }
 
+  private User findUserOrThrow(UUID id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 id: " + id));
+  }
+
   private Channel findChannelOrThrow(UUID id) {
     return channelRepository
         .findById(id)
@@ -118,7 +127,7 @@ public class BasicChannelService implements ChannelService {
       return List.of();
     }
     return readStatusRepository.findAllByChannelId(channel.getId()).stream()
-        .map(ReadStatus::getUserId)
+        .map(readStatus -> readStatus.getUser().getId())
         .toList();
   }
 }

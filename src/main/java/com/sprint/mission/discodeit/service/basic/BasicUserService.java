@@ -33,11 +33,11 @@ public class BasicUserService implements UserService {
     validateDuplicateUsername(request.username());
     validateDuplicateEmail(request.email());
 
-    UUID profileId = profile.map(this::saveProfile).orElse(null);
+    BinaryContent profileContent = profile.map(this::saveProfile).orElse(null);
     User user =
         userRepository.save(
-            new User(request.username(), request.email(), request.password(), profileId));
-    UserStatus userStatus = statusRepository.save(new UserStatus(user.getId(), Instant.now()));
+            new User(request.username(), request.email(), request.password(), profileContent));
+    UserStatus userStatus = statusRepository.save(new UserStatus(user, Instant.now()));
 
     return UserResponse.toResponse(user, userStatus.isOnline());
   }
@@ -78,12 +78,12 @@ public class BasicUserService implements UserService {
       validateDuplicateEmail(updateRequest.newEmail());
     }
 
-    UUID newProfileId = null;
+    BinaryContent newProfile = null;
     if (profile.isPresent()) {
-      UUID oldProfileId = user.getProfileId();
-      newProfileId = saveProfile(profile.get());
-      if (oldProfileId != null) {
-        contentRepository.deleteById(oldProfileId);
+      BinaryContent oldProfile = user.getProfile();
+      newProfile = saveProfile(profile.get());
+      if (oldProfile != null) {
+        contentRepository.deleteById(oldProfile.getId());
       }
     }
 
@@ -91,7 +91,7 @@ public class BasicUserService implements UserService {
         updateRequest.newUsername(),
         updateRequest.newEmail(),
         updateRequest.newPassword(),
-        newProfileId);
+        newProfile);
     User updatedUser = userRepository.save(user);
 
     boolean online = statusRepository.findByUserId(id).map(UserStatus::isOnline).orElse(false);
@@ -101,8 +101,8 @@ public class BasicUserService implements UserService {
   @Override
   public void delete(UUID id) {
     User user = findUserOrThrow(id);
-    if (user.getProfileId() != null) {
-      contentRepository.deleteById(user.getProfileId());
+    if (user.getProfile() != null) {
+      contentRepository.deleteById(user.getProfile().getId());
     }
     statusRepository
         .findByUserId(id)
@@ -122,10 +122,10 @@ public class BasicUserService implements UserService {
     }
   }
 
-  private UUID saveProfile(BinaryContentCreateRequest profile) {
+  private BinaryContent saveProfile(BinaryContentCreateRequest profile) {
     BinaryContent binaryContent =
         new BinaryContent(profile.filename(), profile.contentType(), profile.bytes());
-    return contentRepository.save(binaryContent).getId();
+    return contentRepository.save(binaryContent);
   }
 
   private User findUserOrThrow(UUID id) {

@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.request.UserStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.UserStatusResponse;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
@@ -23,12 +24,11 @@ public class BasicUserStatusService implements UserStatusService {
 
   @Override
   public UserStatusResponse create(UserStatusCreateRequest request) {
-    validateUserExists(request.userId());
+    User user = findUserOrThrow(request.userId());
     validateNotDuplicated(request.userId());
 
     Instant lastActiveAt = request.lastActiveAt() != null ? request.lastActiveAt() : Instant.now();
-    UserStatus userStatus =
-        userStatusRepository.save(new UserStatus(request.userId(), lastActiveAt));
+    UserStatus userStatus = userStatusRepository.save(new UserStatus(user, lastActiveAt));
 
     return UserStatusResponse.toResponse(userStatus);
   }
@@ -73,10 +73,10 @@ public class BasicUserStatusService implements UserStatusService {
     userStatusRepository.deleteById(id);
   }
 
-  private void validateUserExists(UUID userId) {
-    if (!userRepository.existsById(userId)) {
-      throw new NoSuchElementException("존재하지 않은 유저 id: " + userId);
-    }
+  private User findUserOrThrow(UUID userId) {
+    return userRepository
+        .findById(userId)
+        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저 id: " + userId));
   }
 
   private void validateNotDuplicated(UUID userId) {
