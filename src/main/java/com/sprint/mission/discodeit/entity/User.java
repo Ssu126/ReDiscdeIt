@@ -1,12 +1,11 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import java.util.UUID;
 import lombok.Getter;
 
 @Getter
 public class User extends BaseUpdatableEntity {
-
-  private static final long serialVersionUID = 1L;
 
   private String username;
   private String email;

@@ -1,11 +1,10 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import lombok.Getter;
 
 @Getter
 public class Channel extends BaseUpdatableEntity {
-
-  private static final long serialVersionUID = 1L;
 
   private String name;
   private String description;

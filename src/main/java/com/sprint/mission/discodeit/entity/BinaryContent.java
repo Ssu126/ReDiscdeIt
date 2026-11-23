@@ -1,11 +1,10 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
 import lombok.Getter;
 
 @Getter
-public class BinaryContent extends Common {
-
-  private static final long serialVersionUID = 1L;
+public class BinaryContent extends BaseEntity {
 
   private final String fileName;
   private final String contentType;

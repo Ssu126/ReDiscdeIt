@@ -1,13 +1,12 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 
 @Getter
 public class Message extends BaseUpdatableEntity {
-
-  private static final long serialVersionUID = 1L;
 
   private String content;
   private UUID authorId;

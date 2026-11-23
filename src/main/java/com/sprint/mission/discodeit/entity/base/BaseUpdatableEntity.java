@@ -1,12 +1,11 @@
-package com.sprint.mission.discodeit.entity;
+package com.sprint.mission.discodeit.entity.base;
 
 import java.time.Instant;
 import lombok.Getter;
 
 @Getter
-public abstract class BaseUpdatableEntity extends Common {
+public abstract class BaseUpdatableEntity extends BaseEntity {
 
-  private static final long serialVersionUID = 1L;
   private Instant updatedAt;
 
   protected void updateTimestamp() {
