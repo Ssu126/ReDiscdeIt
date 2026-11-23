@@ -1,4 +1,4 @@
-교create table binary_contents
+create table binary_contents
 (
     id           uuid primary key,
     created_at   timestamptz  not null,
