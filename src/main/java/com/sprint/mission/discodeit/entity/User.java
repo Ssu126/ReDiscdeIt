@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
-import java.util.UUID;
 import lombok.Getter;
 
 @Getter
@@ -10,16 +9,17 @@ public class User extends BaseUpdatableEntity {
   private String username;
   private String email;
   private String password;
-  private UUID profileId;
+  private BinaryContent profile;
+  private UserStatus status;
 
-  public User(String username, String email, String password, UUID profileId) {
+  public User(String username, String email, String password, BinaryContent profile) {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.profileId = profileId;
+    this.profile = profile;
   }
 
-  public void update(String username, String email, String password, UUID profileId) {
+  public void update(String username, String email, String password, BinaryContent profile) {
     if (username != null && !username.isBlank()) {
       this.username = username;
     }
@@ -29,8 +29,12 @@ public class User extends BaseUpdatableEntity {
     if (password != null && !password.isBlank()) {
       this.password = password;
     }
-    if (profileId != null) {
-      this.profileId = profileId;
+    if (profile != null) {
+      this.profile = profile;
     }
+  }
+
+  void setStatus(UserStatus status) {
+    this.status = status;
   }
 }

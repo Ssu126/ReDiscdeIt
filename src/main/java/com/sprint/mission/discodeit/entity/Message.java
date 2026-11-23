@@ -2,22 +2,21 @@ package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 
 @Getter
 public class Message extends BaseUpdatableEntity {
 
   private String content;
-  private UUID authorId;
-  private UUID channelId;
-  private final List<UUID> attachmentIds;
+  private User author;
+  private Channel channel;
+  private final List<BinaryContent> attachments;
 
-  public Message(String content, UUID authorId, UUID channelId, List<UUID> attachmentIds) {
+  public Message(String content, User author, Channel channel, List<BinaryContent> attachments) {
     this.content = content;
-    this.authorId = authorId;
-    this.channelId = channelId;
-    this.attachmentIds = attachmentIds == null ? List.of() : List.copyOf(attachmentIds);
+    this.author = author;
+    this.channel = channel;
+    this.attachments = attachments == null ? List.of() : List.copyOf(attachments);
   }
 
   public void update(String content) {
