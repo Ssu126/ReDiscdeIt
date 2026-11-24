@@ -3,7 +3,7 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.MessageResponse;
+import com.sprint.mission.discodeit.dto.response.MessageDto;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,16 +30,16 @@ public class MessageController {
   private final MessageService messageService;
 
   @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<MessageResponse> create(
+  public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest request,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments)
       throws IOException {
-    MessageResponse created = messageService.create(request, toAttachmentRequests(attachments));
+    MessageDto created = messageService.create(request, toAttachmentRequests(attachments));
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @RequestMapping(value = "/{messageId}", method = RequestMethod.PATCH)
-  public ResponseEntity<MessageResponse> update(
+  public ResponseEntity<MessageDto> update(
       @PathVariable UUID messageId, @RequestBody MessageUpdateRequest request) {
     return ResponseEntity.ok(messageService.update(messageId, request));
   }
@@ -51,7 +51,7 @@ public class MessageController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<MessageResponse>> findAllByChannelId(@RequestParam UUID channelId) {
+  public ResponseEntity<List<MessageDto>> findAllByChannelId(@RequestParam UUID channelId) {
     return ResponseEntity.ok(messageService.findAllByChannelId(channelId));
   }
 

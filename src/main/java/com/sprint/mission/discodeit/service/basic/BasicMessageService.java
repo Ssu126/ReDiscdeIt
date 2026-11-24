@@ -3,12 +3,12 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.MessageResponse;
+import com.sprint.mission.discodeit.dto.response.MessageDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
-import com.sprint.mission.discodeit.repository.BinaryContentRepository;
+import com.sprint.mission.discodeit.mapper.MessageMapper;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
@@ -28,11 +28,11 @@ public class BasicMessageService implements MessageService {
   private final MessageRepository messageRepository;
   private final UserRepository userRepository;
   private final ChannelRepository channelRepository;
-  private final BinaryContentRepository binaryContentRepository;
+  private final MessageMapper messageMapper;
 
   @Override
   @Transactional
-  public MessageResponse create(
+  public MessageDto create(
       MessageCreateRequest messageCreateRequest, List<BinaryContentCreateRequest> attachments) {
     User author = findUserOrThrow(messageCreateRequest.authorId());
     Channel channel = findChannelOrThrow(messageCreateRequest.channelId());
@@ -45,31 +45,31 @@ public class BasicMessageService implements MessageService {
         messageRepository.save(
             new Message(messageCreateRequest.content(), author, channel, attachmentContents));
 
-    return MessageResponse.toResponse(message);
+    return messageMapper.toDto(message);
   }
 
   @Override
-  public MessageResponse find(UUID id) {
+  public MessageDto find(UUID id) {
     Message message = findMessageOrThrow(id);
-    return MessageResponse.toResponse(message);
+    return messageMapper.toDto(message);
   }
 
   @Override
-  public List<MessageResponse> findAllByChannelId(UUID channelId) {
+  public List<MessageDto> findAllByChannelId(UUID channelId) {
     return messageRepository.findAllByChannelId(channelId).stream()
-        .map(MessageResponse::toResponse)
+        .map(messageMapper::toDto)
         .toList();
   }
 
   @Override
   @Transactional
-  public MessageResponse update(UUID id, MessageUpdateRequest request) {
+  public MessageDto update(UUID id, MessageUpdateRequest request) {
     Message message = findMessageOrThrow(id);
     validateContent(request.newContent());
 
     message.update(request.newContent());
 
-    return MessageResponse.toResponse(message);
+    return messageMapper.toDto(message);
   }
 
   @Override
