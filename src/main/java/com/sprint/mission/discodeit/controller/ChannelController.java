@@ -3,7 +3,7 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.dto.request.ChannelUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.PrivateChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
-import com.sprint.mission.discodeit.dto.response.ChannelResponse;
+import com.sprint.mission.discodeit.dto.response.ChannelDto;
 import com.sprint.mission.discodeit.service.ChannelService;
 import java.util.List;
 import java.util.UUID;
@@ -25,19 +25,18 @@ public class ChannelController {
   private final ChannelService channelService;
 
   @RequestMapping(value = "/public", method = RequestMethod.POST)
-  public ResponseEntity<ChannelResponse> createPublic(
-      @RequestBody PublicChannelCreateRequest request) {
+  public ResponseEntity<ChannelDto> createPublic(@RequestBody PublicChannelCreateRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(channelService.createPublic(request));
   }
 
   @RequestMapping(value = "/private", method = RequestMethod.POST)
-  public ResponseEntity<ChannelResponse> createPrivate(
+  public ResponseEntity<ChannelDto> createPrivate(
       @RequestBody PrivateChannelCreateRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(channelService.createPrivate(request));
   }
 
   @RequestMapping(value = "/{channelId}", method = RequestMethod.PATCH)
-  public ResponseEntity<ChannelResponse> update(
+  public ResponseEntity<ChannelDto> update(
       @PathVariable UUID channelId, @RequestBody ChannelUpdateRequest request) {
     return ResponseEntity.ok(channelService.update(channelId, request));
   }
@@ -49,7 +48,7 @@ public class ChannelController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<ChannelResponse>> findAllByUserId(@RequestParam UUID userId) {
+  public ResponseEntity<List<ChannelDto>> findAllByUserId(@RequestParam UUID userId) {
     return ResponseEntity.ok(channelService.findAllByUserId(userId));
   }
 }
