@@ -5,16 +5,21 @@ import com.sprint.mission.discodeit.dto.response.UserResponse;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.AuthService;
+import java.time.Instant;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicAuthService implements AuthService {
 
   private final UserRepository userRepository;
 
+  @Override
+  @Transactional
   public UserResponse login(LoginRequest request) {
     User user =
         userRepository
@@ -24,6 +29,8 @@ public class BasicAuthService implements AuthService {
     if (!user.getPassword().equals(request.password())) {
       throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
     }
+
+    user.getStatus().update(Instant.now());
 
     return UserResponse.toResponse(user, true);
   }
