@@ -7,22 +7,22 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicBinaryContentService implements BinaryContentService {
 
   private final BinaryContentRepository binaryContentRepository;
 
   @Override
+  @Transactional
   public BinaryContentResponse create(BinaryContentCreateRequest request) {
-    BinaryContent binaryContent =
-        binaryContentRepository.save(
-            new BinaryContent(request.filename(), request.contentType(), request.bytes()));
+    BinaryContent binaryContent = binaryContentRepository.save(request.toEntity());
 
     return BinaryContentResponse.toResponse(binaryContent);
   }
@@ -34,14 +34,13 @@ public class BasicBinaryContentService implements BinaryContentService {
 
   @Override
   public List<BinaryContentResponse> findAllByIdIn(List<UUID> ids) {
-    return ids.stream()
-        .map(binaryContentRepository::findById)
-        .flatMap(Optional::stream)
+    return binaryContentRepository.findAllById(ids).stream()
         .map(BinaryContentResponse::toResponse)
         .toList();
   }
 
   @Override
+  @Transactional
   public void delete(UUID id) {
     findBinaryContentOrThrow(id);
     binaryContentRepository.deleteById(id);
