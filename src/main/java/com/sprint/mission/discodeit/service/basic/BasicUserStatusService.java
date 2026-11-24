@@ -2,9 +2,10 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.request.UserStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.UserStatusResponse;
+import com.sprint.mission.discodeit.dto.response.UserStatusDto;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.mapper.UserStatusMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.UserStatusService;
@@ -23,42 +24,43 @@ public class BasicUserStatusService implements UserStatusService {
 
   private final UserStatusRepository userStatusRepository;
   private final UserRepository userRepository;
+  private final UserStatusMapper userStatusMapper;
 
   @Override
   @Transactional
-  public UserStatusResponse create(UserStatusCreateRequest request) {
+  public UserStatusDto create(UserStatusCreateRequest request) {
     User user = findUserOrThrow(request.userId());
     validateNotDuplicated(request.userId());
 
     Instant lastActiveAt = request.lastActiveAt() != null ? request.lastActiveAt() : Instant.now();
     UserStatus userStatus = userStatusRepository.save(new UserStatus(user, lastActiveAt));
 
-    return UserStatusResponse.toResponse(userStatus);
+    return userStatusMapper.toDto(userStatus);
   }
 
   @Override
-  public UserStatusResponse find(UUID id) {
+  public UserStatusDto find(UUID id) {
     UserStatus userStatus = findUserStatusOrThrow(id);
-    return UserStatusResponse.toResponse(userStatus);
+    return userStatusMapper.toDto(userStatus);
   }
 
   @Override
-  public List<UserStatusResponse> findAll() {
-    return userStatusRepository.findAll().stream().map(UserStatusResponse::toResponse).toList();
+  public List<UserStatusDto> findAll() {
+    return userStatusRepository.findAll().stream().map(userStatusMapper::toDto).toList();
   }
 
   @Override
   @Transactional
-  public UserStatusResponse update(UUID id, UserStatusUpdateRequest request) {
+  public UserStatusDto update(UUID id, UserStatusUpdateRequest request) {
     UserStatus userStatus = findUserStatusOrThrow(id);
     userStatus.update(request.newLastActiveAt());
 
-    return UserStatusResponse.toResponse(userStatus);
+    return userStatusMapper.toDto(userStatus);
   }
 
   @Override
   @Transactional
-  public UserStatusResponse updateByUserId(UUID userId, Instant lastActiveAt) {
+  public UserStatusDto updateByUserId(UUID userId, Instant lastActiveAt) {
     UserStatus userStatus =
         userStatusRepository
             .findByUserId(userId)
@@ -66,7 +68,7 @@ public class BasicUserStatusService implements UserStatusService {
 
     userStatus.update(lastActiveAt);
 
-    return UserStatusResponse.toResponse(userStatus);
+    return userStatusMapper.toDto(userStatus);
   }
 
   @Override

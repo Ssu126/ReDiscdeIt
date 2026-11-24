@@ -5,7 +5,7 @@ import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.UserDto;
-import com.sprint.mission.discodeit.dto.response.UserStatusResponse;
+import com.sprint.mission.discodeit.dto.response.UserStatusDto;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class UserController {
   }
 
   @RequestMapping(value = "/{userId}/userStatus", method = RequestMethod.PATCH)
-  public ResponseEntity<UserStatusResponse> updateUserStatus(
+  public ResponseEntity<UserStatusDto> updateUserStatus(
       @PathVariable UUID userId, @RequestBody UserStatusUpdateRequest request) {
     return ResponseEntity.ok(userStatusService.updateByUserId(userId, request.newLastActiveAt()));
   }
