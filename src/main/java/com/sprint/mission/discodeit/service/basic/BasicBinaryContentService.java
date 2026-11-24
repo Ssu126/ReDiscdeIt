@@ -1,8 +1,9 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
-import com.sprint.mission.discodeit.dto.response.BinaryContentResponse;
+import com.sprint.mission.discodeit.dto.response.BinaryContentDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import java.util.List;
@@ -18,24 +19,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class BasicBinaryContentService implements BinaryContentService {
 
   private final BinaryContentRepository binaryContentRepository;
+  private final BinaryContentMapper binaryContentMapper;
 
   @Override
   @Transactional
-  public BinaryContentResponse create(BinaryContentCreateRequest request) {
+  public BinaryContentDto create(BinaryContentCreateRequest request) {
     BinaryContent binaryContent = binaryContentRepository.save(request.toEntity());
 
-    return BinaryContentResponse.toResponse(binaryContent);
+    return binaryContentMapper.toDto(binaryContent);
   }
 
   @Override
-  public BinaryContentResponse find(UUID id) {
-    return BinaryContentResponse.toResponse(findBinaryContentOrThrow(id));
+  public BinaryContentDto find(UUID id) {
+    return binaryContentMapper.toDto(findBinaryContentOrThrow(id));
   }
 
   @Override
-  public List<BinaryContentResponse> findAllByIdIn(List<UUID> ids) {
+  public List<BinaryContentDto> findAllByIdIn(List<UUID> ids) {
     return binaryContentRepository.findAllById(ids).stream()
-        .map(BinaryContentResponse::toResponse)
+        .map(binaryContentMapper::toDto)
         .toList();
   }
 
