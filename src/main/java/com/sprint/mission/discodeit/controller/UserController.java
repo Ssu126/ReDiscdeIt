@@ -4,7 +4,7 @@ import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserStatusUpdateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.UserResponse;
+import com.sprint.mission.discodeit.dto.response.UserDto;
 import com.sprint.mission.discodeit.dto.response.UserStatusResponse;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
@@ -33,11 +33,11 @@ public class UserController {
   private final UserStatusService userStatusService;
 
   @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<UserResponse> create(
+  public ResponseEntity<UserDto> create(
       @RequestPart("userCreateRequest") UserCreateRequest request,
       @RequestPart(value = "profile", required = false) MultipartFile profile)
       throws IOException {
-    UserResponse created = userService.create(request, toProfileRequest(profile));
+    UserDto created = userService.create(request, toProfileRequest(profile));
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
@@ -45,7 +45,7 @@ public class UserController {
       value = "/{userId}",
       method = RequestMethod.PATCH,
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<UserResponse> update(
+  public ResponseEntity<UserDto> update(
       @PathVariable UUID userId,
       @RequestPart("userUpdateRequest") UserUpdateRequest request,
       @RequestPart(value = "profile", required = false) MultipartFile profile)
@@ -66,7 +66,7 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<UserResponse>> findAll() {
+  public ResponseEntity<List<UserDto>> findAll() {
     return ResponseEntity.ok(userService.findAll());
   }
 

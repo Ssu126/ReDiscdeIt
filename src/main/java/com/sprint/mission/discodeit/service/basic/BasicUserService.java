@@ -3,10 +3,11 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.UserResponse;
+import com.sprint.mission.discodeit.dto.response.UserDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 import java.time.Instant;
@@ -24,11 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BasicUserService implements UserService {
 
   private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
   @Override
   @Transactional
-  public UserResponse create(
-      UserCreateRequest request, Optional<BinaryContentCreateRequest> profile) {
+  public UserDto create(UserCreateRequest request, Optional<BinaryContentCreateRequest> profile) {
     validateDuplicateUsername(request.username());
     validateDuplicateEmail(request.email());
 
@@ -38,25 +39,23 @@ public class BasicUserService implements UserService {
 
     User savedUser = userRepository.save(user);
 
-    return UserResponse.toResponse(savedUser, isOnline(savedUser));
+    return userMapper.toDto(savedUser);
   }
 
   @Override
-  public UserResponse find(UUID id) {
+  public UserDto find(UUID id) {
     User user = findUserOrThrow(id);
-    return UserResponse.toResponse(user, isOnline(user));
+    return userMapper.toDto(user);
   }
 
   @Override
-  public List<UserResponse> findAll() {
-    return userRepository.findAll().stream()
-        .map(user -> UserResponse.toResponse(user, isOnline(user)))
-        .toList();
+  public List<UserDto> findAll() {
+    return userRepository.findAll().stream().map(userMapper::toDto).toList();
   }
 
   @Override
   @Transactional
-  public UserResponse update(
+  public UserDto update(
       UUID id, UserUpdateRequest updateRequest, Optional<BinaryContentCreateRequest> profile) {
     User user = findUserOrThrow(id);
 
@@ -75,7 +74,7 @@ public class BasicUserService implements UserService {
         updateRequest.newPassword(),
         newProfile);
 
-    return UserResponse.toResponse(user, isOnline(user));
+    return userMapper.toDto(user);
   }
 
   @Override
