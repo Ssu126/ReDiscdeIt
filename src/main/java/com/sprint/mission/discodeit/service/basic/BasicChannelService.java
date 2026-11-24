@@ -21,9 +21,11 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicChannelService implements ChannelService {
 
   private final ChannelRepository channelRepository;
@@ -32,6 +34,7 @@ public class BasicChannelService implements ChannelService {
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public ChannelResponse createPublic(PublicChannelCreateRequest request) {
     Channel channel =
         channelRepository.save(
@@ -41,6 +44,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @Transactional
   public ChannelResponse createPrivate(PrivateChannelCreateRequest request) {
     Channel channel = channelRepository.save(new Channel(null, null, ChannelType.PRIVATE));
 
@@ -81,6 +85,7 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
+  @Transactional
   public ChannelResponse update(UUID id, ChannelUpdateRequest request) {
     Channel channel = findChannelOrThrow(id);
 
@@ -89,17 +94,17 @@ public class BasicChannelService implements ChannelService {
     }
 
     channel.update(request.newName(), request.newDescription());
-    Channel updated = channelRepository.save(channel);
+
     return ChannelResponse.toResponse(
-        updated, findLastMessageAt(updated), findParticipantIds(updated));
+        channel, findLastMessageAt(channel), findParticipantIds(channel));
   }
 
   @Override
+  @Transactional
   public void delete(UUID id) {
     findChannelOrThrow(id);
 
     messageRepository.deleteByChannelId(id);
-    readStatusRepository.deleteByChannelId(id);
     channelRepository.deleteById(id);
   }
 
