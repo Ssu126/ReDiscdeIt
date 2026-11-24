@@ -14,15 +14,18 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicUserStatusService implements UserStatusService {
 
   private final UserStatusRepository userStatusRepository;
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public UserStatusResponse create(UserStatusCreateRequest request) {
     User user = findUserOrThrow(request.userId());
     validateNotDuplicated(request.userId());
@@ -45,16 +48,16 @@ public class BasicUserStatusService implements UserStatusService {
   }
 
   @Override
+  @Transactional
   public UserStatusResponse update(UUID id, UserStatusUpdateRequest request) {
     UserStatus userStatus = findUserStatusOrThrow(id);
-
     userStatus.update(request.newLastActiveAt());
-    UserStatus updated = userStatusRepository.save(userStatus);
 
-    return UserStatusResponse.toResponse(updated);
+    return UserStatusResponse.toResponse(userStatus);
   }
 
   @Override
+  @Transactional
   public UserStatusResponse updateByUserId(UUID userId, Instant lastActiveAt) {
     UserStatus userStatus =
         userStatusRepository
@@ -62,12 +65,12 @@ public class BasicUserStatusService implements UserStatusService {
             .orElseThrow(() -> new NoSuchElementException("상태 정보가 없는 유저 id: " + userId));
 
     userStatus.update(lastActiveAt);
-    UserStatus updated = userStatusRepository.save(userStatus);
 
-    return UserStatusResponse.toResponse(updated);
+    return UserStatusResponse.toResponse(userStatus);
   }
 
   @Override
+  @Transactional
   public void delete(UUID id) {
     findUserStatusOrThrow(id);
     userStatusRepository.deleteById(id);
