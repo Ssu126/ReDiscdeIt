@@ -18,9 +18,11 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasicMessageService implements MessageService {
 
   private final MessageRepository messageRepository;
@@ -29,24 +31,19 @@ public class BasicMessageService implements MessageService {
   private final BinaryContentRepository binaryContentRepository;
 
   @Override
+  @Transactional
   public MessageResponse create(
       MessageCreateRequest messageCreateRequest, List<BinaryContentCreateRequest> attachments) {
     User author = findUserOrThrow(messageCreateRequest.authorId());
     Channel channel = findChannelOrThrow(messageCreateRequest.channelId());
     validateContent(messageCreateRequest.content());
 
-    List<BinaryContent> saveAttachments =
-        attachments.stream()
-            .map(
-                attachment ->
-                    binaryContentRepository.save(
-                        new BinaryContent(
-                            attachment.filename(), attachment.contentType(), attachment.bytes())))
-            .toList();
+    List<BinaryContent> attachmentContents =
+        attachments.stream().map(BinaryContentCreateRequest::toEntity).toList();
 
     Message message =
         messageRepository.save(
-            new Message(messageCreateRequest.content(), author, channel, saveAttachments));
+            new Message(messageCreateRequest.content(), author, channel, attachmentContents));
 
     return MessageResponse.toResponse(message);
   }
@@ -65,23 +62,20 @@ public class BasicMessageService implements MessageService {
   }
 
   @Override
+  @Transactional
   public MessageResponse update(UUID id, MessageUpdateRequest request) {
     Message message = findMessageOrThrow(id);
     validateContent(request.newContent());
 
     message.update(request.newContent());
-    messageRepository.save(message);
 
     return MessageResponse.toResponse(message);
   }
 
   @Override
+  @Transactional
   public void delete(UUID id) {
-    Message message = findMessageOrThrow(id);
-
-    message
-        .getAttachments()
-        .forEach(attachment -> binaryContentRepository.deleteById(attachment.getId()));
+    findMessageOrThrow(id);
     messageRepository.deleteById(id);
   }
 
