@@ -11,6 +11,6 @@ public record BinaryContentCreateRequest(String filename, String contentType, by
   }
 
   public BinaryContent toEntity() {
-    return new BinaryContent(filename, contentType, bytes);
+    return new BinaryContent(filename, contentType, (long) bytes.length);
   }
 }
