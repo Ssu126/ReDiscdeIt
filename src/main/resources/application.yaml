@@ -21,3 +21,9 @@ logging:
 
 server:
   port: ${PORT:8080}
+
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: .discodeit/storage
