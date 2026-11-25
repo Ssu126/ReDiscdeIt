@@ -6,7 +6,6 @@ import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.response.ChannelDto;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
-import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.mapper.ChannelMapper;
@@ -15,8 +14,6 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
-import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -115,21 +112,5 @@ public class BasicChannelService implements ChannelService {
     return channelRepository
         .findById(id)
         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 채널 id: " + id));
-  }
-
-  private Instant findLastMessageAt(Channel channel) {
-    return messageRepository.findAllByChannelId(channel.getId()).stream()
-        .map(Message::getCreatedAt)
-        .max(Comparator.naturalOrder())
-        .orElse(null);
-  }
-
-  private List<UUID> findParticipantIds(Channel channel) {
-    if (channel.getType() != ChannelType.PRIVATE) {
-      return List.of();
-    }
-    return readStatusRepository.findAllByChannelId(channel.getId()).stream()
-        .map(readStatus -> readStatus.getUser().getId())
-        .toList();
   }
 }
