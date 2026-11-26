@@ -1,21 +1,31 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class BinaryContent extends Common {
+@Entity
+@Table(name = "binary_contents")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class BinaryContent extends BaseEntity {
 
-  private static final long serialVersionUID = 1L;
+  @Column(nullable = false)
+  private String fileName;
 
-  private final String fileName;
-  private final String contentType;
-  private final Long size;
-  private final byte[] bytes;
+  @Column(nullable = false, length = 100)
+  private String contentType;
 
-  public BinaryContent(String fileName, String contentType, byte[] bytes) {
+  @Column(nullable = false)
+  private Long size;
+
+  public BinaryContent(String fileName, String contentType, Long size) {
     this.fileName = fileName;
     this.contentType = contentType;
-    this.size = (long) bytes.length;
-    this.bytes = bytes;
+    this.size = size;
   }
 }

@@ -3,13 +3,17 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.dto.response.MessageResponse;
+import com.sprint.mission.discodeit.dto.response.MessageDto;
+import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +34,16 @@ public class MessageController {
   private final MessageService messageService;
 
   @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<MessageResponse> create(
+  public ResponseEntity<MessageDto> create(
       @RequestPart("messageCreateRequest") MessageCreateRequest request,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments)
       throws IOException {
-    MessageResponse created = messageService.create(request, toAttachmentRequests(attachments));
+    MessageDto created = messageService.create(request, toAttachmentRequests(attachments));
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @RequestMapping(value = "/{messageId}", method = RequestMethod.PATCH)
-  public ResponseEntity<MessageResponse> update(
+  public ResponseEntity<MessageDto> update(
       @PathVariable UUID messageId, @RequestBody MessageUpdateRequest request) {
     return ResponseEntity.ok(messageService.update(messageId, request));
   }
@@ -51,8 +55,11 @@ public class MessageController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<MessageResponse>> findAllByChannelId(@RequestParam UUID channelId) {
-    return ResponseEntity.ok(messageService.findAllByChannelId(channelId));
+  public ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
+      @RequestParam UUID channelId,
+      @PageableDefault(size = 50, sort = "createdAt", direction = Direction.DESC)
+          Pageable pageable) {
+    return ResponseEntity.ok(messageService.findAllByChannelId(channelId, pageable));
   }
 
   private List<BinaryContentCreateRequest> toAttachmentRequests(List<MultipartFile> files)

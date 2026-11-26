@@ -46,5 +46,8 @@ bin/
 ### Mission ###
 /MISSION/
 
-화### Data (File IO) ###
+### Data (File IO) ###
 .discodeit/
+
+### Env ###
+.env
