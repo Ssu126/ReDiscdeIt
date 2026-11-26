@@ -9,10 +9,12 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.mapper.MessageMapper;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -28,6 +30,8 @@ public class BasicMessageService implements MessageService {
   private final MessageRepository messageRepository;
   private final UserRepository userRepository;
   private final ChannelRepository channelRepository;
+  private final BinaryContentRepository binaryContentRepository;
+  private final BinaryContentStorage binaryContentStorage;
   private final MessageMapper messageMapper;
 
   @Override
@@ -38,8 +42,7 @@ public class BasicMessageService implements MessageService {
     Channel channel = findChannelOrThrow(messageCreateRequest.channelId());
     validateContent(messageCreateRequest.content());
 
-    List<BinaryContent> attachmentContents =
-        attachments.stream().map(BinaryContentCreateRequest::toEntity).toList();
+    List<BinaryContent> attachmentContents = saveAttachments(attachments);
 
     Message message =
         messageRepository.save(
@@ -77,6 +80,17 @@ public class BasicMessageService implements MessageService {
   public void delete(UUID id) {
     findMessageOrThrow(id);
     messageRepository.deleteById(id);
+  }
+
+  private List<BinaryContent> saveAttachments(List<BinaryContentCreateRequest> attachments) {
+    return attachments.stream()
+        .map(
+            request -> {
+              BinaryContent binaryContent = binaryContentRepository.save(request.toEntity());
+              binaryContentStorage.put(binaryContent.getId(), request.bytes());
+              return binaryContent;
+            })
+        .toList();
   }
 
   private User findUserOrThrow(UUID userId) {

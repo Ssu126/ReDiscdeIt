@@ -8,8 +8,10 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.mapper.UserMapper;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BasicUserService implements UserService {
 
   private final UserRepository userRepository;
+  private final BinaryContentRepository binaryContentRepository;
+  private final BinaryContentStorage binaryContentStorage;
   private final UserMapper userMapper;
 
   @Override
@@ -33,12 +37,11 @@ public class BasicUserService implements UserService {
     validateDuplicateUsername(request.username());
     validateDuplicateEmail(request.email());
 
-    BinaryContent profileContent = profile.map(BinaryContentCreateRequest::toEntity).orElse(null);
+    BinaryContent profileContent = saveProfile(profile);
     User user = new User(request.username(), request.email(), request.password(), profileContent);
     new UserStatus(user, Instant.now());
 
     User savedUser = userRepository.save(user);
-
     return userMapper.toDto(savedUser);
   }
 
@@ -67,12 +70,11 @@ public class BasicUserService implements UserService {
       validateDuplicateEmail(updateRequest.newEmail());
     }
 
-    BinaryContent newProfile = profile.map(BinaryContentCreateRequest::toEntity).orElse(null);
     user.update(
         updateRequest.newUsername(),
         updateRequest.newEmail(),
         updateRequest.newPassword(),
-        newProfile);
+        saveProfile(profile));
 
     return userMapper.toDto(user);
   }
@@ -84,9 +86,15 @@ public class BasicUserService implements UserService {
     userRepository.delete(user);
   }
 
-  private boolean isOnline(User user) {
-    UserStatus status = user.getStatus();
-    return status != null && status.isOnline();
+  private BinaryContent saveProfile(Optional<BinaryContentCreateRequest> profile) {
+    return profile
+        .map(
+            request -> {
+              BinaryContent binaryContent = binaryContentRepository.save(request.toEntity());
+              binaryContentStorage.put(binaryContent.getId(), request.bytes());
+              return binaryContent;
+            })
+        .orElse(null);
   }
 
   private void validateDuplicateUsername(String username) {
